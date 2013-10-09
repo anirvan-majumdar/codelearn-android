@@ -40,11 +40,33 @@ A new Android project consists of a bunch of folders and files. However, for our
 
 <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-09%20at%2011.37.01%20PM.png" 
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android project structure">
-    
+
 * `src` &ndash; contains all the Java source files.
 * `res` &ndash; XML files and image files related to the UI. Like layout files, application constants.
 * `AndroidManifest.xml` &ndash; can be considered as a project definition file. 
 * `libs` &ndash; any external libraries that are to be included in the binary form (JAR files) are added here.
+
+### Creating a Splash screen
+
+The purpose of a splash screen, besides sometimes being an irritating interruption, is to 
+provide a window of time in which to showcase some basic branding information. You should bear
+in mind that you don't stretch the patience of your app's user by going stretching the time
+too long. As a rule of thumb, something like 2-3 seconds should be fine.  
+    Another important role played by the splash screen is to provide an opportunity for you to
+perform some background tasks &mdash; like verifying user credentials, syncing data with server, etc.  
+    For our app, this isn't a concern. Here's what we'll do for creating a basic splash screen &mdash;
+
+* Creating a new layout file.
+* Explain layout file. Source XML code and the *Graphical Layout* section.
+* Introduce `RelativeLayout` and its attributes.
+* Introduce `TextView` and its attributes.
+* Linking the layout file to the corresponding `Activity` class.
+* Short introduction about the `Activity` class.
+* Talk about UI thread, and **never** blocking it.
+* Introduce the `Handler` class to perform asynchronous tasks.
+* Basic introduction about an `Intent`, and how to go to the next screen.
+
+
 
 
 
