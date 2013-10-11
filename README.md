@@ -1,7 +1,9 @@
 Android Tutorial
 ================
 
-### A Basic Overview of the Application
+### Step 1 &mdash; A Basic Overview of the Application
+
+-------
 
 This is a simple project to take a newcomer to Android through the chores in a simple and *realistic* manner.
 
@@ -65,6 +67,31 @@ perform some background tasks &mdash; like verifying user credentials, syncing d
 * Talk about UI thread, and **never** blocking it.
 * Introduce the `Handler` class to perform asynchronous tasks.
 * Basic introduction about an `Intent`, and how to go to the next screen.
+
+### The Login Screen 
+
+We will create a basic login screen. Our purpose for now will be to familiarise ourselves with
+some basics of UI handling, and how to tie together the interaction between UI elements and
+the `Activity` class.
+
+* Create another `RelativeLayout`.
+* Explain the layout &mdash; top bar, `EditView`, `Button`
+* Complete the interaction with `OnClickListeners`. 
+* Capturing the values entered by the user.
+
+### First approach to a List-based Screen
+
+As has been the approach so far, we will first create a basic list view to familiarise 
+ourselves with the basics of how to handle the UI. There are some associated concepts 
+to understand about the role of the corresponding `Activity` class too.
+
+* Create a `ListView` layout.
+* Introduce the concept of creating a layout file for each list item.
+* From a basic list item layout, create a somewhat more complex layout.
+* Introduce a `ListActivity`.
+* Talk about the `Adapter` class and its basic role.
+* Populate the adapter class with some default values. Show how it renders.
+* Make a point about reusable views, and the need to avoid a memory leak.
 
 
 
