@@ -11,9 +11,9 @@ So what all will we deal with in this application?
 
 * Creating a new Android project.
 * A brief look around the project structure.  
-* Start with a splash screen.
-* Create the basic UI framework for a login screen.
+* Getting started with a basic UI framework for a login screen.
 * Next up, create the UI components for a list (which would eventually show tweets).
+* Selecting a tweet to see more details about it.
 
 ### Creating a new project
 
@@ -34,7 +34,22 @@ So what all will we deal with in this application?
   <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-09%20at%2010.17.59%20PM.png" 
     style="width: 60%; height: auto; box-shadow: 1px 1px 1px #c2c2c2" alt="Android New Project">
 * Still no option for Android? You'd better refer to our [elaborate notes](http://codelearn.org) to see if you've missed out on something.
-* Walkthrough of what all to configure in a new project.
+* The new Android project wizard starts with the basic details screen
+
+    <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.11.33%20AM.png" 
+    style="width: 60%; height: auto; box-shadow: 1px 1px 1px #c2c2c2" alt="Android New Project Wizard">
+
+* Give a suitable name to the project. For the other fields, you can simply work with the defaults. Just to give you quick 
+understanding, the SDK options mean the following &mdash;
+    * *Minimum Required SDK* &ndash the minimum Android SDK version that your app can support.
+    * *Target SDK* &ndash; the Android SDK for which you are building your app. 
+    * *Compile with* &ndash; the Android SDK libraries that should be used for your code. 
+    * All these SDK options sure seem confusing, but the best way to understand them is to think, that you're building
+    your app to use the latest Android features, and at the same time, letting Android know that your app should also work
+    for older versions. So any unsupported new feature should be gracefully handled/hidden from users of older Android versions.
+
+* For the rest of screens in the wizard, I'd recommend you to use the defaults. For the **Create Activity** screen, remember to
+choose the *Blank Activity*.
 
 ### The project structure
 
@@ -48,25 +63,49 @@ A new Android project consists of a bunch of folders and files. However, for our
 * `AndroidManifest.xml` &ndash; can be considered as a project definition file. 
 * `libs` &ndash; any external libraries that are to be included in the binary form (JAR files) are added here.
 
-### Creating a Splash screen
+At this very point, let's take this basic looking app for a spin. To do so, right click on your project, go to 
+*Run As*, and then select *Android Application*.
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.27.46%20AM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Run Android Project">
 
-The purpose of a splash screen, besides sometimes being an irritating interruption, is to 
-provide a window of time in which to showcase some basic branding information. You should bear
-in mind that you don't stretch the patience of your app's user by going stretching the time
-too long. As a rule of thumb, something like 2-3 seconds should be fine.  
-    Another important role played by the splash screen is to provide an opportunity for you to
-perform some background tasks &mdash; like verifying user credentials, syncing data with server, etc.  
-    For our app, this isn't a concern. Here's what we'll do for creating a basic splash screen &mdash;
+Eclipse will show a prompt asking you whether you *wish to create a new Android Virtual Device*? Selecting *Yes* would bring up
+2 new windows. One titled *Android Device Chooser*, and the other titled *Android Device Manager*. For now, just close the *Android
+Device Chooser* window. We'll come to it later.
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.35.23%20AM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android Device Manager">
 
-* Creating a new layout file.
-* Explain layout file. Source XML code and the *Graphical Layout* section.
-* Introduce `RelativeLayout` and its attributes.
-* Introduce `TextView` and its attributes.
-* Linking the layout file to the corresponding `Activity` class.
-* Short introduction about the `Activity` class.
-* Talk about UI thread, and **never** blocking it.
-* Introduce the `Handler` class to perform asynchronous tasks.
-* Basic introduction about an `Intent`, and how to go to the next screen.
+Before progressing, if you would like to learn a bit more about Android Virtual Devices (AVD), I'd strongly urge you to 
+visit the [topic covered in detail](http://www.codelearn.com) in our theoretical course.
+
+Getting back, click on *New*, and enter the information for your AVD. Give it a *name*, and to keep things simple, in the
+*Device* seciton, simply select one of the preset devices, like *Nexus XX*. This way you can avoid filling a bunch of other
+mostly, non-essential (to this course) data.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.41.15%20AM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android Virtual Device">
+
+Once you click on *Ok*, this new AVD will be listed in the *Virtual Device Manager* window. Select the AVD you just created 
+and click on the *Start* button. Another dialog &mdash; Launch Options &mdash; will show up, let the defaults stay, and click
+on *Launch*. 
+Now sit back and relax. An emulator will launch and slowly load all the necessary data to become operational. This process can
+take quite some time, so let things go on till the time you see that your AVD screen resembles that of an actual phone.
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.48.51%20AM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android Virtual Device in Action">
+
+Take some time to play around with the device. You can use the mouse and also the keyboard. But its more intuitive to use the mouse.
+Be forewarned, the experience of using the AVD can be a bit disappointing if you've used a real device. Don't lose heart
+though. The AVD will function just fine for our developmental needs.
+
+Now that you've launched the AVD, let's go back to Eclipse and continue. Firstly, close the *Android Device Manager* window. Next, 
+again right click on your project and *Run as* an *Android Application*. At this point, you'll notice the *Console* in Eclipse
+comes alive with activity. You can follow the lines getting printed to understand the process of how your app gets deployed.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.56.55%20AM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android console">
+
+Now if you go back to your AVD, you'll see a rather pale looking app screen, with the text *Hello World* written on it. 
+Quite unimpressive, I'm sure. However, as we progress, we will be putting in things that will make for a pretty good looking app.
+
 
 ### The Login Screen 
 
