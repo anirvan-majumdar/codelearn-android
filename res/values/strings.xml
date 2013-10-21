@@ -3,6 +3,11 @@
 
     <string name="app_name">HelloTwitter</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hdr_title">Hello Twitter</string>
+    <string name="lbl_username">Username</string>
+    <string name="lbl_pwd">Password</string>
+    <string name="lbl_login">Login</string>
+    <string name="lbl_enter_username">Enter your username</string>
+    <string name="lbl_enter_pwd">Enter your password</string>
 
 </resources>

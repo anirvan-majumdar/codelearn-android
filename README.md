@@ -113,10 +113,75 @@ We will create a basic login screen. Our purpose for now will be to familiarise 
 some basics of UI handling, and how to tie together the interaction between UI elements and
 the `Activity` class.
 
-* Create another `RelativeLayout`.
-* Explain the layout &mdash; top bar, `EditView`, `Button`
-* Complete the interaction with `OnClickListeners`. 
-* Capturing the values entered by the user.
+To start with, let's remove that not-so-good-looking default header that is appearing at the top of
+your screen. To do this, open your `AndroidManifest.xml` file, and add the following to the `activity` 
+tag corresponding to your `MainActivty` &mdash; `android:theme="@android:style/Theme.NoTitleBar"`. 
+
+*Styling*/*Theming* your app can be done in many ways. One of the ways is to apply pre-defined styles in the Manifest file, like we
+just did. Other ways to accomplish it is to add style declarations in the `styles.xml` file placed in the `/res/values` folder. Of 
+course, you can also achieve styling in a programmatic manner, but from performance and separation-of-concerns perspective, that is
+generally frowned upon.
+
+Now let's open the **layout XML** file for our activity class. If you chose the default setting to create your app, you'll find
+the file `activity_main.xml` located in the `/res/layout` folder. The name of your layout file might be different depending on
+what you chose to name it initially, but it will always be located within this folder.
+
+By default, you'll find a `RelativeLayout` element, with a `TextView` element contained in it. At this point, it might be a good
+idea for you to go brush up your knowledge about [Layouts](http://codelearn.org) and the [basic views](http://codelearn.org), like 
+&ndash; text, edit, image and button.
+
+The basic screen layout that we will be creating would look something like this &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-21%20at%206.50.47%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android console">
+
+As an Android developer, you should keep in mind that there are usually more than one way of creating the same UI. A bit like
+the way it is with HTML. However, amongst the multiple ways, the *better* way is usually the one which is *less verbose* and is 
+*less redundant*. While these guidelines can be applied to HTML as well, there are some Android specific design factors you 
+need to bear in mind &mdash;
+
+* Minimise the dependency of using absolute measurements like `dp` to specify dimensions. The more you use it, the more
+are the chances of your app to render differently on different screen sizes.
+* `LinearLayout`s generally render faster than `RelativeLayout`s. This is because Android needs to do additional computation to
+figure out all the dependencies associated with a `RelativeLayout`. (Although you'll certainly encounter many situations where
+a `RelativeLayout` is the only way out.)
+
+Keeping these points in mind, our approach to designing the app would resemble the following &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-21%20at%206.59.48%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android console">
+
+The last remaining part to completing our **Login Screen** is to handle the transition of the screen, when the user clicks
+on the `Login` button. As mentioned before, we will *not* be adding any validation or processing at the code level to handle
+our Login screen's interaction. We simply take the user to the next screen to display the list of tweets.
+
+To do this, we will register a [`ClickListener`](http://codelearn.org) with the login button. In your `MainActivity` class, you'll need to 
+obtain a reference to the button you defined in the layout file. This is where the `android:id` attribute assigned to your
+button in the layout XML file will come in handy. The basic code to otain the reference is as follows &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-21%20at%207.16.40%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Button reference code">
+
+Once you've got the reference, you need to assign a *callback* action to it. A *callback* is a piece of code that you
+want to execute when the Login button is pressed. In Android, we define callback actions using [anonymous classes](http://codelearn.org). For 
+our Login button, we set the `OnClickListener` by creating an instance of `View.OnClickListener`. As part of defining that class,
+we will need to insert our logic of showing the next screen in the `onClick` method. 
+
+The logic of showing the next screen involves creating an [`Intent`](http://codelearn.org), and passing an instance of the current 
+activity and the class reference of the next `Activity` class. 
+
+**NOTE:** Remember that the `this` reference within your `ClickListener` refers to the anonymous inner class and *not* the current
+`Activity` class. To get the instance to that, you'll need to use &ndash `MainActivity.this`.
+
+Lastly, invoke the `startActivty` method, passing in the `intent` instance, to show the next `Activty` class. That's it.
+
+**NOTE**: Remember to add an `<activity>` entry in the `AndroidManifest.xml` file for the new `Activity class.
+
+The click listener code should look something like this &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-21%20at%207.31.15%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="On Click Listener Code">
+
 
 ### First approach to a List-based Screen
 
