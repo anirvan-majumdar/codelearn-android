@@ -65,12 +65,15 @@ A new Android project consists of a bunch of folders and files. However, for our
 
 At this very point, let's take this basic looking app for a spin. To do so, right click on your project, go to 
 *Run As*, and then select *Android Application*.
+
+
 <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.27.46%20AM.png" 
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Run Android Project">
 
 Eclipse will show a prompt asking you whether you *wish to create a new Android Virtual Device*? Selecting *Yes* would bring up
 2 new windows. One titled *Android Device Chooser*, and the other titled *Android Device Manager*. For now, just close the *Android
 Device Chooser* window. We'll come to it later.
+
 <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.35.23%20AM.png" 
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android Device Manager">
 
@@ -89,6 +92,7 @@ and click on the *Start* button. Another dialog &mdash; Launch Options &mdash; w
 on *Launch*. 
 Now sit back and relax. An emulator will launch and slowly load all the necessary data to become operational. This process can
 take quite some time, so let things go on till the time you see that your AVD screen resembles that of an actual phone.
+
 <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-18%20at%2012.48.51%20AM.png" 
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android Virtual Device in Action">
 
@@ -149,7 +153,10 @@ a `RelativeLayout` is the only way out.)
 Keeping these points in mind, our approach to designing the app would resemble the following &mdash;
 
 <img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-21%20at%206.59.48%20PM.png" 
-    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Android console">
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Layout overview">
+
+You can checkout the source of the XML in detail [here](https://github.com/anirvan-majumdar/codelearn-android/blob/426c12b7787baf7e26a00dfeef3e4f7da02ff19c/res/layout/activity_main.xml). The basic structure for the layout in XML is as follows &mdash;
+
 
 The last remaining part to completing our **Login Screen** is to handle the transition of the screen, when the user clicks
 on the `Login` button. As mentioned before, we will *not* be adding any validation or processing at the code level to handle
@@ -175,7 +182,7 @@ activity and the class reference of the next `Activity` class.
 
 Lastly, invoke the `startActivty` method, passing in the `intent` instance, to show the next `Activty` class. That's it.
 
-**NOTE**: Remember to add an `<activity>` entry in the `AndroidManifest.xml` file for the new `Activity class.
+**NOTE**: Remember to add an `<activity>` entry in the `AndroidManifest.xml` file for the new `Activity` class.
 
 The click listener code should look something like this &mdash;
 
@@ -183,20 +190,139 @@ The click listener code should look something like this &mdash;
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="On Click Listener Code">
 
 
-### First approach to a List-based Screen
+### Building Out the Tweets List
 
 As has been the approach so far, we will first create a basic list view to familiarise 
-ourselves with the basics of how to handle the UI. There are some associated concepts 
-to understand about the role of the corresponding `Activity` class too.
+ourselves with the basics of how to handle the UI. 
 
-* Create a `ListView` layout.
-* Introduce the concept of creating a layout file for each list item.
-* From a basic list item layout, create a somewhat more complex layout.
-* Introduce a `ListActivity`.
-* Talk about the `Adapter` class and its basic role.
-* Populate the adapter class with some default values. Show how it renders.
-* Make a point about reusable views, and the need to avoid a memory leak.
+For this screen, our approach towards designing the UI would be as follows &mdash;
 
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-22%20at%209.17.17%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="List View overview">
+
+Now what's that *No Data Text View*, you ask? Well, it is one of those nice design guidelines to follow. You see,
+there might be times when your user comes to this screen, and there may be no tweets to show. So in general, it 
+is considered a *best-practice* to provide a visual cue to the user about what's happening. Otherwise, the user gets
+to see a blank screen and feel lost. Not good!
+
+Let's proceed to making this screen. First up, we'll need to have a layout XML file. Go to the `layout` folder, and
+create a new `Android XML Layout File` by going to *File > New > Android XML File*. Name this file `activity_tweet.xml`.
+You'll see that the new file wizard has selected a `LinearLayout` for you by default. Let's stick with that, since it 
+works well for our purposes.
+
+Once the file has been created, go ahead and add the first part &ndash; `TextView` &ndash; to the file. Here's how your
+snippet should look. 
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-22%20at%209.25.03%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet List TextView">
+
+The attributes used for this `TextView` are fairly generic. We're making it wrap the content along with some padding. 
+Setting the text and its styling components. And finally, to align the `TextView` in the center, we're setting the 
+`layout_gravity` attribute. 
+
+**TIP**: When you want to align child elements of a particular view, you use the attribute `gravity`. However, when 
+you want to override the parent's `gravity` setting at a child element level, you need to use `layout_gravity`.
+
+Next up, let's define the `ListView` for our layout &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screen%20Shot%202013-10-22%20at%209.31.07%20PM.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet List ListView">
+
+This might look like a rather simple and small piece of code, but do not be misled by this. Right now, we are going
+to make use of the simplest form of a `ListView`. As the requirements grow complex, this piece of code would grow
+signficantly. 
+
+The most important attribute to understand here is the `id` attribute. We are making use of a special ID which is
+provided by the Android SDK especially for `ListView`. This special ID provides easy access to associated `Activity`
+class to this particular `ListView`. However, you are by no means limited to using the special ID and can very well
+go ahead and assign your own ID. For the sake of this course, we will stick to the special ID though.
+
+--------------
+
+Feel free to refer the concept lessons about the [`ListView`](http://codelearn.org). It'll only help you in cruising
+through this part &ndash; trust me on that!
+
+--------------
+
+If you go ahead and launch the app on the emulator or the device, and navigate to the tweets list screen, all you
+will get to see is an empty screen with the *No Data text view* showing up. Alright, so where did that list go? Well,
+it's right there. It's just that we've not set any data to the list view, so nothing shows up. 
+
+**List View &ndash; A Short Explanation** &mdash; the way a `ListView` works is that it renders a collection of items,
+which are referred to as list view *items* or *rows*. Each row item should itself be defined within a separate
+layout file. At the same time, the data to be displayed for every row item needs to be set explicitly by the backing 
+`Activity` class. The `Activity` class in-turn manages to do this by associating a `List` instance with the `ListView`. 
+This is done with the help of an `Adapter` class. 
+
+All this might sound a bit loopy right now, but just hang in there. Things will be crystal clear within the next few tasks
+that we undertake. But before that, take a moment to understand the relationship between the layout file's `ListView` and 
+the `Adapter` and `ArrayList` (or any other `List` implementation) class' relationship with each other.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-13%2023.19.48.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="ListView, Adapter, List relationship">
+
+Alright, so let's bring our focus onto the backing `Activity` class for our tweets list. At the end of our previous section, 
+you might have created the `Activty` class by extending the `android.app.Activity` class. Fair enough. However, to 
+make things simpler for working with lists, the Android SDK provides a special variant of the `Activity` class called
+the `ListActivity` class. So go ahead and change the super class of the `TweetList` class to a `ListActivity`.
+
+Next up, as we saw in the relationship diagram, let's create a simple `ArrayList` and populate it with some simple `String`
+values.
+
+Before we can associate this `List` of strings with the `ListView`, we need to have an adapter in place. The purpose of
+the adapter, as shown in the diagram, is to associate each value in the `List` to each row in the `ListView`. However, 
+we need to define a layout view for each of the rows. Go ahead and create a simple layout file using a `LinearLayout` 
+which consists a single `TextView`. Name this layout file as `row_tweets.xml`. The content of this file should look
+something like this &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-13%2023.27.29.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="List Row Item Layout">
+
+With the layout file for the list row item ready, we are good to continue with defining our `Adapter` for the `ListView`.
+Defining an `Adapter` is quite a simple task actually. All you need to do is extend the `ListAdapter` class, define a 
+constructor (which accepts the `ArrayList` instance), and then define the logic of rendering each row for the `ListView`.
+
+-------------
+
+Just in case you haven't, a thorough, conceptual writeup is available [here](http://codelearn.org) for reference.  
+
+-------------
+
+**TIP**: It is generally a good idea to keep the definition of the `Adapter` class local to your `ListActivity` class. However, if
+you have an app where you need to render the same kind of list in different activity classes, then you should define a separate
+adapter class.
+
+Here's the code snippet showing how to define an `Adapter` class &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-13%2023.38.47.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Adapter class definition">
+
+Let's take a closer look at this `Adapter` class. We started off by extending the `ArrayAdapter` class. There are quite
+a few other adapter classes provided by the Android SDK. An `ArrayAdapter` is useful for creating a list from a simple list of objects. 
+More complex Adapters provide an easy way to load the data from the embedded SQLite database. While we won't be covering those here, 
+you should certainly take the time out to go through our [concept lessons on `Adapters`](http://codelearn.org).  
+
+The `LayoutInflater` instance is required for expanding the layout XML file for each row.  
+
+The `getView(...)` method is the one invoked by the Android platform for rendering every single row that is being shown. So, if your
+device screen can accommodate 5 rows at a time, this method will first get invoked 5 times. As you scroll down, for every single new row, this
+method will be invoked again. The row that moves out of view from the top, will be replaced by a new one at the bottom. Effectively, 
+the whole row layout file will be inflated that many times and each of the row layout elements will be set that many times. As you might
+have guessed, this can become quite an expensive way of rendering lists, and is often the source of many memory leaks in Android apps. To 
+prevent that, we should always check whether we can reuse an existing reference to the row's layout view, and then set the values for
+each of the elements contained within the row's view. 
+
+**TIP** &mdash; Displaying a `ListView` can often lead to memory leaks. The best way to avoid such a thing is to reuse the references
+to each of the row's layout elements as much as is possible.
+
+Once the adapter's code has been written, if we now deploy the code to the emulator/device, and navigate to the `ListView` screen,
+we will see our simple list rendered as such &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/list-view.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Basic List View">  
+
+If you've gotten this far, you've come a long way indeed! Take some time to understand the steps we've followed until this point to
+have a better understanding of the concepts involved. 
 
 
 

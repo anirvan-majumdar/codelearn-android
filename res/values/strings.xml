@@ -9,5 +9,6 @@
     <string name="lbl_login">Login</string>
     <string name="lbl_enter_username">Enter your username</string>
     <string name="lbl_enter_pwd">Enter your password</string>
+    <string name="lbl_no_data">No tweets available as of now.</string>
 
 </resources>
