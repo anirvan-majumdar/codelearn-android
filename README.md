@@ -1,7 +1,7 @@
 Android Tutorial
 ================
 
-### Step 1 &mdash; A Basic Overview of the Application
+## Part 1 &mdash; A Basic Overview of the Application
 
 -------
 
@@ -324,8 +324,106 @@ we will see our simple list rendered as such &mdash;
 If you've gotten this far, you've come a long way indeed! Take some time to understand the steps we've followed until this point to
 have a better understanding of the concepts involved. 
 
+### Customising List Views
+
+So far, we've created a `ListView`, which displays a simple text in each row. Let's take matters further by creating a somewhat more
+detailed view for the rows of our `ListView`.
 
 
 
 
+## Part 2 &mdash; Getting Started with Data
 
+-------
+
+Now that we've gone through the elementary tasks of setting up the user interface for our app, it's time for us to look into the
+data handling part. Any smartphone device in general, provides a variety of ways by which we can capture, process and store data 
+through the interactions of the users. While we haven't covered the entire spectrum of user interactions, we have so far created
+enough points of interaction for us to start working with them.  
+
+### A Better Login Experience  
+Let's get back to our Login screen. As you might remember, we had created the simple UI and were taking the user to the next screen
+upon the click of a button. Now, we will spend some time capturing the data entered by the user in these fields and work to create
+an experience, which is more complete in nature.
+
+The first thing we need to do is capture the data entered by the user in the *Username* and *Password* fields. To go about it, we 
+require references to the 2 `EditText` views that we had placed in our layout file. Here's the short snippet to get these references
+pointing to the correct `EditText` fields &mdash;
+
+First declare the references to the `EditText` fields at the class level as *instance* variables (this isn't mandatory, but usually
+helps in accessing the field values from different methods. Otherwise, you'll need to pass them around everywhere.)
+
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-20%2009.28.33.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Declaring EditText references">  
+
+Next, we need to initialise these references by accessing the corresponding fields, which will be created by the layout inflater of
+the Android SDK. It really isn't as hard as it may sound. The only thing you need to keep in mind is that, you try to access fields
+declared in your layout *only after* you have invoked `setContentView(R.layout.layout_file)`. Otherwise, you'll get an error.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-20%2009.32.53.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Accessing layout field references">  
+
+The `findViewById` method is a convenience method defined for all `Activity` classes. This method allows you to retrieve any view, which
+has a particular `android:id` attribute set in the layout. 
+
+**TIP** &mdash; For accessing layout fields, you should always do so **after** invoking the `setContentView` method. If you're familiar
+with Javascript and HTML, the `findViewById` method works very similarly to the `document.getElementById(...)` method. Besides the
+`Activity` class, `findViewById` is also defined for every view in Android. So, if you want to search for an element defined within, say
+a `RelativeLayout`, you can invoke the `findViewById` method on a reference that points to the `RelativeLayout` view! Doing so is usually
+more efficient than searching for an element by ID across the entire layout file. Especially so, if the layout file is complex.
+
+This is a good time to introduce you to Android's default logging framework. It might be a surprise, but if you use `System.out.println(...)`
+nothing will get printed on the console. That's because Android doesn't really support a notion of standard IO. To print any statement 
+you need to use `android.util.Log` class' methods. This class defines a bunch of static methods for logging *debug*, *info*, *error* and other relevant
+levels. To view the log messages, you need to have the **Logcat** view open. Here's a simple debug log statement &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-20%2009.48.18.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Using Android Log">  
+
+And this is how it'll look in the **Logcat** view of Eclipse &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-20%2010.04.38.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
+
+Alright, so now that we've managed to retrieve the values entered by the user, we need to allow the user to have a *desirable* login experience.  
+
+*So what exactly makes up a desirable experience?*  
+It is one where the user logs-in once, and doesn't have to provide his/her credentials for successive app launches. An important part of this 
+experience is provided by the server with which the app interacts. The server usually hands out a *token* or a *session ID* which needs to be
+cached by the app. Whenever the user relaunches the app, a check is made in the cache to check whether this data is available, and then decide
+to show the login page or not. In our case, since we don't have a server component, we'll simply cache the user's login username, and make a check
+on that.  
+
+Storing data by an app brings us to the first option used to persist data by an app &mdash; `SharedPreferences`.
+
+----------  
+
+Please take the time to get a fair understanding about `SharedPreferences` from our [concept tutorial](http://codelearn.org).  
+
+----------      
+
+Making use of `SharedPreferences`, our logic needs to be somthing like this &mdash;  
+
+* in the `onCreate` method, we'll first check to see whether the `SharedPreferences` have a value for the username.  
+* if we don't find any value, we'll show the Login screen, otherwise we'll take the user directly to the tweets list screen.  
+* also, if the user performs a login, we need to store the user's username in the `SharedPreferences`.
+
+Let's start by storing the user's username in the `SharedPreferences`.  In the `onClickListener` method, let's capture the data and 
+store it in the `SharedPreferences`.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-21%2014.31.18.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
+
+One way to think about the `SharedPreferences` is to consider it as a big `Map` (or `Dictionary` in other languages) of keys and values.
+Getting a reference to the `SharedPreferences` allows you to *read* values from it, but if you wish to write into it, you'll need to 
+retrieve an instance to the `Editor` and use any of its `put____` methods.  
+
+Finally, here's the small bit of logic we need to include so that our application handles the flow of the app depending on the absence
+or presence of user's credential details. Here's how it will look &mdash;
+
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-21%2015.22.29.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
+
+And that's that, with this in place, we've added enough logic and data handling to provide the user an *ideal login experience*. 
