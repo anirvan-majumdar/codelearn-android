@@ -346,7 +346,7 @@ Here's a visual overview of how the elements will be placed &mdash;
 
 Let's take a look at the layout XML file now &mdash;
 
-<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2010.59.32.png" 
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2013.59.11.png" 
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet View Layout XML">  
 
 Here are some things to note about this layout&mdash;  
@@ -371,6 +371,40 @@ Next, comment out the lines in the `TweetList` activity class, where we were set
 
 Now go ahead and run the project on the emulator/device. That's a job well done!
 
+
+### Handling the click of a list item
+
+It's time now to implement the most common interaction pattern involved with a `ListView` &mdash; clicking on a list item. To start with 
+this, we'll be implementing the following logic &mdash;
+
+* Handle the click of a list item.  
+* Take the user to a new activity and display the full detail view of the tweet clicked on. Bear in mind, that in the list item,
+we had constrained the `TextView` size for both the header and the body. We had also used `ellipsize` to terminate the text. In the
+detail screen, we will not be doing so.
+
+First up, let's have the basic design of the tweet detail screen in place. We will be striving to achieve something like this &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2013.00.33.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet detail screen">  
+
+As before, we will make use of an outer `LinearLayout` and place the elements within it. Here's how we will go about arranging 
+the layout XML file &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2013.07.18.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet detail screen layout">  
+
+In this screen, what you might have realised is that we can reuse a lot of the components from the `row_tweets.xml` file. There are only a
+few minor changes we'll need to make. Create a new layout XML file &ndash; `activity_tweet.xml` &ndash; by copying the contents of the 
+`row_tweets.xml` file. After that, move the `ImageView` outside the `LinearLayout` it was previously placed in. To get the header and body
+text of the tweet to render, we will now remove the constraining attributes &ndash; `singleLine`, `ellipsize` for the header; and `lines`, 
+`ellipsize` for the body text.
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2013.53.57.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet detail screen layout">  
+
+**NOTE** &mdash; one thing you should bear in mind is that setting the `text` attribute on the `TextView` will result in a warning
+in the editor. This is because Android expects you to declare all hard-coded strings in the the `strings.xml` file. You can safely 
+ignore this warning, but as a good practice, you should follow the suggestion made in the warning.
 
 
 ## Part 2 &mdash; Getting Started with Data

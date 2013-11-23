@@ -4,13 +4,16 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  *	This class displays the list of tweets through ListView.
@@ -72,7 +75,15 @@ public class TweetList extends ListActivity {
 	        
 	        return row;
 		}
-		
+	}
+
+	/**
+	 * Handles the click on any of the list items
+	 */
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Toast.makeText(this, "clicked item: " +position, Toast.LENGTH_LONG).show();
+		startActivity(new Intent(this, TweetActivity.class));
 	}
 
 }
