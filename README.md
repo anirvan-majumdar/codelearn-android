@@ -327,8 +327,49 @@ have a better understanding of the concepts involved.
 ### Customising List Views
 
 So far, we've created a `ListView`, which displays a simple text in each row. Let's take matters further by creating a somewhat more
-detailed view for the rows of our `ListView`.
+detailed view for the rows of our `ListView`. At the end, our goal is to create a `ListView` that will look something like this &mdash;
 
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-22%2018.37.34.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Advanced view for Tweets list">  
+
+To achieve this, we will need to modify the layout file for the each of the Tweets. Let's go ahead and put in the required code
+in the `row_tweets.xml` file. The way we're going to go about this layout is as follows &mdash;  
+
+* Have an outer `LinearLayout` with `orientation` set to `horizontal`, so that the elements come one after the other.
+* Add an `ImageView` for the profile image, and then have another `LinearLayout` with `orientation` set to `vertical` for
+adding the text elements in a top-to-down manner.
+
+Here's a visual overview of how the elements will be placed &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2010.45.20.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet View Layout">  
+
+Let's take a look at the layout XML file now &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2010.59.32.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Tweet View Layout XML">  
+
+Here are some things to note about this layout&mdash;  
+
+*  We make use of the `sp` unit for declaring text sizes. `sp` stands for *Scale (independent) Pixels*. This is similar to `dp`,
+but also takes into consideration the user's default font settings.  
+*  The attribute `ellipsize` set on the `TextView` is meant for trimming the containing text when its size exceeds that of the
+available space for rendering it.  
+*  The profile image is loaded from a static PNG image. You can access it from [here](https://dl.dropboxusercontent.com/u/1166125/codelearn/user_profile.png)
+and copy it to a new folder named **drawable** in your workspace.
+
+To add the final touches, let's make some minor changes to the `ListView` component in the `activity_tweets.xml` file. Add the 
+following 2 lines to the `ListView` element defined &mdash;  
+
+    android:dividerHeight   = "10dp"  
+    android:divider         = "#e0e0e0"   
+
+Next, comment out the lines in the `TweetList` activity class, where we were setting a string value for each of the `ListView` items.
+
+    // TextView tv = (TextView) row.findViewById(R.id.tweet_title);
+    // tv.setText(_tweetList.get(position));
+
+Now go ahead and run the project on the emulator/device. That's a job well done!
 
 
 

@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
 				Editor edit = prefs.edit();
 				edit.putString("username", _username);
 				edit.commit();
+				
+				showTweetsScreen();
 			}
 			
 		});

@@ -2,16 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <TextView android:id="@+id/row_title" 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:padding="10dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-    />
-    
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id					="@+id/tweet_image"
+        android:layout_width		="70dp"
+        android:layout_height		="70dp"
+        android:layout_marginLeft	="5dp"
+        android:layout_marginTop	="5dp"
+        android:background			="@drawable/user_profile"
+        android:contentDescription	="@string/alt_profile_img" />
+    <LinearLayout
+        android:layout_width		="wrap_content"
+        android:layout_height		="wrap_content"
+        android:layout_marginLeft	="10dp"
+        android:gravity				="left"
+        android:orientation			="vertical" >
+        <TextView
+            android:id				="@+id/tweet_title"
+            android:layout_width	="fill_parent"
+            android:layout_height	="wrap_content"
+            android:ellipsize		="end"
+            android:singleLine		="true"
+            android:text			="Header Stuff Body text goes round and round and round"
+            android:textSize		="19sp"
+            android:textStyle		="bold" />
+        <TextView
+            android:id				="@+id/tweet_body"
+            android:layout_width	="fill_parent"
+            android:layout_height	="wrap_content"
+            android:layout_gravity	="center_vertical"
+            android:layout_marginTop="5dp"
+            android:ellipsize		="end"
+            android:lines			="3"
+            android:text			="Body text goes round and round and round Body text goes \
+            							round and round and round Body text goes \
+            							round and round and round zzzzz xxxx"
+            android:textSize		="14sp" />
+        <TextView
+            android:id				="@+id/tweet_date"
+            android:layout_width	="fill_parent"
+            android:layout_height	="wrap_content"
+            android:layout_gravity	="center_vertical"
+            android:layout_marginTop="5dp"
+            android:text			="21st November, 2013"
+            android:textSize		="12sp" />
+    </LinearLayout>
 
 </LinearLayout>

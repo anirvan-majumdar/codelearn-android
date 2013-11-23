@@ -67,8 +67,8 @@ public class TweetList extends ListActivity {
 	            row = _inflater.inflate(R.layout.row_tweets, parent, false);
 	        }
 	        
-	        TextView tv = (TextView) row.findViewById(R.id.row_title);
-	        tv.setText(_tweetList.get(position));
+	        // TextView tv = (TextView) row.findViewById(R.id.tweet_title);
+	        // tv.setText(_tweetList.get(position));
 	        
 	        return row;
 		}

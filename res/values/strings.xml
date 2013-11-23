@@ -10,5 +10,6 @@
     <string name="lbl_enter_username">Enter your username</string>
     <string name="lbl_enter_pwd">Enter your password</string>
     <string name="lbl_no_data">No tweets available as of now.</string>
+    <string name="alt_profile_img">Profile Image</string>
 
 </resources>
