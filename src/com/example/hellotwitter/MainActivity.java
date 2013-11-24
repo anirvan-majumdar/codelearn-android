@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
 	private void showTweetsScreen() {
 		Intent intent = new Intent(MainActivity.this, TweetList.class);
 		startActivity(intent);
+		finish();
 	}
 
 }

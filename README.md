@@ -406,6 +406,23 @@ text of the tweet to render, we will now remove the constraining attributes &nda
 in the editor. This is because Android expects you to declare all hard-coded strings in the the `strings.xml` file. You can safely 
 ignore this warning, but as a good practice, you should follow the suggestion made in the warning.
 
+Now that the *tweet detail* screen has been set up, let's put in the necessary logic for capturing the particular row item's click in the
+tweet list view. To do this, we need to define an `onListItemClick(...)` method. As this method is already defined for the `ListActivity` 
+class, we simply need to override it. Here's a simple implementation of the method that will do the job for us &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2017.51.12.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="handling list item click"> 
+
+As you can see, the SDK takes care of passing across a reference to the `ListView`, the row's view, the position/index of the item clicked in 
+the list and the associated `ID` of the item. This information is more than sufficient for us to retrieve the particular `Tweet` object. Simply
+use the `position` value to index into the `List` of `Tweet` objects that we had used to build the `Adapter`. That should get you a reference to
+the correct `Tweet` object. We will come to this in the next section. 
+
+For now, we simply create an `Intent` and show the `TweetActivity`. 
+
+> Remember to make an entry for every `Activity` that you add into the `AndroidManifest` file as well. Otherwise, Android will throw 
+an exception telling you to do so! While there won't be any compile time errors shown.
+
 
 ## Part 2 &mdash; Getting Started with Data
 
@@ -442,7 +459,7 @@ declared in your layout *only after* you have invoked `setContentView(R.layout.l
 The `findViewById` method is a convenience method defined for all `Activity` classes. This method allows you to retrieve any view, which
 has a particular `android:id` attribute set in the layout. 
 
-**TIP** &mdash; For accessing layout fields, you should always do so **after** invoking the `setContentView` method. If you're familiar
+>**TIP** &mdash; For accessing layout fields, you should always do so **after** invoking the `setContentView` method. If you're familiar
 with Javascript and HTML, the `findViewById` method works very similarly to the `document.getElementById(...)` method. Besides the
 `Activity` class, `findViewById` is also defined for every view in Android. So, if you want to search for an element defined within, say
 a `RelativeLayout`, you can invoke the `findViewById` method on a reference that points to the `RelativeLayout` view! Doing so is usually
@@ -472,11 +489,7 @@ on that.
 
 Storing data by an app brings us to the first option used to persist data by an app &mdash; `SharedPreferences`.
 
-----------  
-
-Please take the time to get a fair understanding about `SharedPreferences` from our [concept tutorial](http://codelearn.org).  
-
-----------      
+> Please take the time to get a fair understanding about `SharedPreferences` from our [concept tutorial](http://codelearn.org).  
 
 Making use of `SharedPreferences`, our logic needs to be somthing like this &mdash;  
 
@@ -502,3 +515,187 @@ or presence of user's credential details. Here's how it will look &mdash;
     style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
 
 And that's that, with this in place, we've added enough logic and data handling to provide the user an *ideal login experience*. 
+
+### Populating the List with Tweet Objects
+
+In the last section, we had simply created the layout for the Tweets list. Now, we will go on and understand how to populate the 
+list with objects of somewhat meaningful data.  
+First we need to create Java objects which would encapsulate the data associated with a tweet. For our case, let us assume that a 
+tweet is made up of a *title*, a *body* and a *date*. Let us also associate an *id* field with each tweet. This would help us uniquely
+identify a tweet amongst others, if the situation so requires. Here's how the code would look for that &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2019.06.23.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
+
+Next, add a small bit of code to the `onCreate(...)` method, which would generate a random bunch of tweet objects, and add them to 
+a `List` object &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-23%2019.09.47.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Logcat showing log message">  
+
+Finally, we need to make some adjustments to the `TweetAdapter` class we had constructed before. As we will be dealing with `Tweet` objects
+in the list and not plain `String` objects, we would have to modify the generic form of the `ArrayAdapter` class that we're extending. So
+go ahead and change it to &mdash;
+
+```
+    private class TweetAdapter extends ArrayAdapter<Tweet>
+```
+
+And then, the only thing remaining is to handle the association of each `Tweet` object's data with each of the row item's layout. This
+is fairly simple, and quite self-explanatory as you can see &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2017.40.48.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Setting tweet row data">  
+
+The `SimpleDateFormat` class is only meant to provide a nice formatting for the date data stored in each `Tweet` object. In our case, we want
+the date to formatted as something like &ndash; *01 January   11:15 am*. 
+
+Take the app out for a spin and see that you're able to get the Tweets list generated with the mock data objects. 
+
+#### Handling caching of data
+
+In the real world scenario, it is quite inefficient to fetch/generate your data always. To make the app more responsive, a good strategy is
+to cache a bit of the data, so that you can show it to the user without any lag, while in the background, you can go fetch new data in an 
+asynchronous manner. If all that sounded a bit overwhelming, do not fret, in the next few steps you'll feel totally at home with this concept.
+
+> It is always better to cache the last set of data to show it to the user, rather than fetching it every time from the server.
+
+To implement a simple strategy of caching, here are the steps that we will be following &mdash;  
+
+* Check if any pre-existing data is available in a cache file.
+* If not, generate/retrieve new data, and write it to the cache file asynchronously.
+* If cache file exists, read the data from it and show it to the user. 
+
+For caching the data, we will use the simple strategy of `Java Serialization`. This is a very easy approach, but beware, it's got a few gotchas
+which you should bear in mind, if you're planning to use it for your real world app &mdash;
+
+* Serialization can break if the class that is being serialized is updated and some attribute is removed from it.
+* If the serialization class makes use of a serialization ID, then care should be taken that it doesn't change across different versions of the
+class.
+* For large data sets, serilization and de-serialization can become quite a slow process.
+
+>*So what exactly are we going to serialize/cache?*  
+Identifying the data to be cached is a very important decision. Care should be taken that you don't cache too much, then the file would bloat up
+quickly, and take a lot of time to read and write into. Also, if you cache too little, you might not be able to provide the desired responsive
+impression to the user of your app, since you'll need to do quite a bit of fetching.   
+Google itself promotes the *big cookie* mode of caching &ndash; that is cache as much as is necessary. Just take care of caching your data in such
+a way, that you don't need to read/write huge chunks of data.
+
+In our case, matters are fairly simple, and we can go ahead and cache the entire list of tweets. However, before we can do so, we need to mark
+the `Tweet` class as `Serializable`. All that is needed is to change the class' declaration to &mdash;  
+
+```
+public class Tweet implements Serializable
+```
+
+Also, just to be sure that Java doesn't run into trouble serializing and de-serializing objects of this class, it's generally a good idea to 
+add a default serialization version UID to the class. So let's do that &mdash;
+
+```
+private static final long serialVersionUID = 1L;
+```
+
+Now we're good to go ahead and cache the data.  
+Getting back to our `TweetList` class, we need to assign a constant name for our cache file. Let's go ahead a declare a reference for this purpose &mdash;
+
+```
+private static final String TWEETS_CACHE_FILE = "cache_tweet.ser";
+```
+
+Looking back at the list of steps to keep in mind to implement our cache, let's write a method `getTweets(...)` to achieve that &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2021.03.11.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Caching tweets method">  
+
+The method definition is quite straight forward, and would make much more sense if you try to walk through it keeping in mind the caching logic that 
+we had outlined earlier. Something new that you'd encounter though is the *handling of files* code &mdash;
+
+```
+openFileInput(TWEETS_CACHE_FILE)
+```
+
+That is the standard way for opening a file in Android for reading. The equivalent code for opening a file for writing purpose is quite similar as 
+well &mdash;
+
+```
+openFileOutput(TWEETS_CACHE_FILE, MODE_PRIVATE);
+```
+
+The `MODE_PRIVATE` is a flag passed to the SDK to indicate that we do not want this file to be publicly accessible to any app other than ours.
+
+----
+
+Android offers quite a simple API for handling files. It is highly recommended you follow our concept lessons on [this topic](http://codelearn.org).
+
+----
+
+While serializing objects seem to be a relatively simple set of operations, bear in mind that you need to follow certain guidelines to make the best
+use of it &mdash;
+
+* remember to `close()` all streams that you open for reading and writing.
+* be sure that size of the object you're serializing isn't very large, because when the data gets deserialized, the app's process might easily throw up
+a `OutOfMemory` error.
+
+One bit of the code which might seem a bit off is the part at the bottom where we invoke an `AsyncCacheWriter...` class. Don't you worry about that. 
+Let's go ahead and take a look at what this class is &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2021.15.51.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Async cache writer class">  
+
+This is a good time to introduce you to the concept of an `AsyncTask`. This is an amazing utility class provided by the Android framework to encapsulate
+any kind background, asynchronous task. The framework also provides other classes which could offer similar functionalities, like the `Handler` class. 
+For our needs, we'll make use of the `AsyncTask` class by simply extending it and putting in the logic of writing data into the cache file within the
+`doInBackground(...)` method. 
+
+----
+
+Be sure to gain a comprehensive understanding about the crucial aspect of performing background tasks in our [concept lessons](http://codelearn.org).
+
+----
+
+>*So why exactly did we choose to push our cache writing logic into an `AsyncTask` and not the reading part?*  
+That's a fair question to ask, and the answer is that in practice where the cache data can be a bit more significant. Say 500 tweets. In that situation, 
+it would be really bad to read on the main execution thread, and not in a background thread. However, in our case, we aren't dealing with such a data size, 
+hence, we're taking that liberty. Having said that, the reason we still went ahead and moved the cache writing logic into a background task is simply 
+because writing is slow. Even with small datasets, writing into files can be sufficiently slow to make for a jittery user experience. Best to avoid!
+
+Alright, so we've successfully got our caching logic strapped in. And hopefully, you are feeling a bit more at home with this concept. Next we'll look
+into sending the particular tweet's data to the tweet detail screen. 
+
+### Sending data across Activities
+
+So far, we've confined the interaction of data and layouts to a single `Activity`. But what should one do when they need to send data across 
+to a different `Activity`, so that it can use it to render its layout?  
+One approach is to have a class defined which holds reference to all such shared data, and then expose static methods to access those data references.
+There can be some other options around such a common class approach, but frankly speaking, that can be a lot of work when all you need to share is 
+small piece of data!  
+For such scenarios, intent `extras` play a vital role.  
+
+Let's explore this further, suppose now we want to pass the data of a particular tweet to the tweet detail screen, when it is clicked on in the `TweetList`
+screen. If you recall, we had defined the `onListItemClick(...)` method to handle the event of a list item's click. Using the `position` reference passed
+to this method, we can index into the `List` object that holds references to all the `Tweet` objects, and retrieve the particular `Tweet` object's data.
+And once we've got this data, all we need to do is add it as an *extra* to the reference of the `Intent` created. We make use of the 
+`putExtra(String key, Serializable value)` method. As for the caching purpose we had already marked the `Tweet` class as `Serializable`, we can simply go
+ahead and add it as an extra!
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2022.27.52.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Async cache writer class">  
+
+Besides `Serializable` objects, you can pass a host of other primitive and non-primitive objects as `Extras` through an `Intent`. You *cannot* send every
+object out there though. Amongst non-primitive objects, Android only allows passing of `Serializable` or `Parceable` objects as extras in an `Intent`.
+
+-----
+
+Refer to our [concept lessons](http://codelearn.org) about `Intent` and the different ways they can be used to familiarise yourself with this topic.
+
+----
+
+Once the data is sent across to the next `Activity`, retrieving it is a fairly simple task. Simply access the intent by invoking `getIntent(...)` in the
+`onCreate(...)` method, and look up the *key* for the particular value.  
+Then go ahead and associate the different layout views with the corresponding data from the `Tweet` object &mdash;
+
+<img src="https://dl.dropboxusercontent.com/u/1166125/codelearn/Screenshot%202013-11-24%2022.33.36.png" 
+    style="box-shadow: 1px 1px 1px #c2c2c2" alt="Async cache writer class">  
+
+And with that, we've come to an end with the data handling section of this tutorial. Going forward, we will further explore on the challenging, yet rewarding, 
+aspect of tying in network calls to fetch data. That will add the *real* interactivity to this app!
